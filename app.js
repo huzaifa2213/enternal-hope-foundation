@@ -33,6 +33,7 @@ const ThirdSection = require('./api/routes/ThirdSection');
 const FourthSection = require('./api/routes/FourthSection');
 const Activity = require('./api/routes/Activity');
 const Cause = require('./api/routes/Cause');
+const News = require('./api/routes/News');
 
 
 
@@ -44,6 +45,7 @@ app.use('/thirdsection',auth,ThirdSection);
 app.use('/fourthSection',auth,FourthSection);
 app.use('/activity',auth,Activity);
 app.use('/cause',auth,Cause);
+app.use('/news',auth,News);
 
 
 app.use((req, res, next) => {
