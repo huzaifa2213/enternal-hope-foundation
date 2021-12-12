@@ -7,7 +7,7 @@ require('dotenv').config();
 
 var url = process.env.MONGO_URL;
 
-const auth = require("./api/middleware/auth");
+const auth = require("./api/middleware/Auth");
 
 app.use(express.json()); // set headers
 
