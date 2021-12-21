@@ -35,6 +35,10 @@ const Activity = require('./api/routes/Activity');
 const Cause = require('./api/routes/Cause');
 const News = require('./api/routes/News');
 
+// frontend
+
+const FrontCause = require('./api/routes/frontend/cause');
+
 
 
 
@@ -46,6 +50,10 @@ app.use('/fourthSection',auth,FourthSection);
 app.use('/activity',auth,Activity);
 app.use('/cause',auth,Cause);
 app.use('/news',auth,News);
+
+// front url
+
+app.use('/frontend/cause',FrontCause);
 
 
 app.use((req, res, next) => {
