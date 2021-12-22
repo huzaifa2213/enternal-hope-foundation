@@ -25,8 +25,8 @@ var upload = multer({ storage: storage });
 router.post('/add',(req,res,next)=>{
     try{
 
-        const {causeName,fundRaise,requiredFund,description} = req.body;
-        if(!causeName || !fundRaise ||  !requiredFund || !description)
+        const {causeName,fundRaise,requiredFund,description,videoUrl} = req.body;
+        if(!causeName || !fundRaise ||  !requiredFund || !description || !videoUrl)
         {
                 return res.status(422).json({
                     success: false,
@@ -40,7 +40,8 @@ router.post('/add',(req,res,next)=>{
             causeName:causeName,
             fundRaise:fundRaise,
             requiredFund:requiredFund,
-            description:description
+            description:description,
+            videoUrl:videoUrl
 
         })
         cause.save().then(result=>{

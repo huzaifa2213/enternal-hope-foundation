@@ -25,8 +25,8 @@ var upload = multer({ storage: storage });
 router.post('/add',(req,res,next)=>{
     try{
 
-        const {name,author,date,description} = req.body;
-        if(!name || !author ||  !date || !description)
+        const {name,author,date,description,videoUrl} = req.body;
+        if(!name || !author ||  !date || !description || !videoUrl)
         {
                 return res.status(422).json({
                     success: false,
@@ -42,7 +42,8 @@ router.post('/add',(req,res,next)=>{
             date:author,        
 
             description:description,
-            image:description
+            image:description,
+            videoUrl:videoUrl
 
         })
         news.save().then(result=>{

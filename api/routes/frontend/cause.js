@@ -2,35 +2,37 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Cause = require('../../model/Cause');
-// const CauseImage = require('../model/CauseImage');
+const CauseImage = require('../../model/CauseImage');
 
 router.get("/get",(req,res,next)=>{
 
     try {
-        Cause.find().then(result=>{
-            if(result)
-            {
-                return res.status(200).json({
-                    success: true,
-                    data: result,
-                    message: "Fetch Cause",
-                });
-            }else{
-                
-                return res.status(404).json({
-                    success: false,
-                    data: '{}',
-                    message: "Data Not Found!",
-                });
 
+        Cause.aggregate([
+            {
+                $lookup:{
+                    from: "CauseImage",
+                    localField: "causeId",
+                    foreignField: "_id",
+                    as: "causeDetails",
+                }
             }
-        }).catch(err=>{
-            return res.status(500).json({
-                success: false,
-                data: '{}',
-                message: "Something Went Wrong!",
-            });
+        ]).exec((err,result)=>{
+            if (err) {
+                return res.status(500).json({
+                  success: false,
+                  data: err,
+                  message: "Something Went wrong",
+                });
+              } else {
+                return res.status(200).json({
+                  success: true,
+                  data: result,
+                  message: "Fetch Homework Category",
+                });
+              }
         })
+
 
     } catch(err) {
         res.status(500).json({ message: err.message, success: false });
