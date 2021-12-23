@@ -11,10 +11,10 @@ router.get("/get",(req,res,next)=>{
         Cause.aggregate([
             {
                 $lookup:{
-                    from: "CauseImage",
-                    localField: "causeId",
-                    foreignField: "_id",
-                    as: "causeDetails",
+                    from: "causeimages",
+                    localField: "_id",
+                    foreignField: "causeId",
+                    as: "causeImageDetails",
                 }
             }
         ]).exec((err,result)=>{
@@ -28,7 +28,7 @@ router.get("/get",(req,res,next)=>{
                 return res.status(200).json({
                   success: true,
                   data: result,
-                  message: "Fetch Homework Category",
+                  message: "Fetch Cause",
                 });
               }
         })
