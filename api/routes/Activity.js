@@ -22,8 +22,11 @@ var upload = multer({ storage: storage });
 
 
 
-router.post('/add',(req,res,next)=>{
+router.post('/add',upload.array('image'),(req,res,next)=>{
     try{
+
+        // console.log(req.files.destination);
+        // return false;
 
         const {activityName,venue,date} = req.body;
         if(!activityName || !venue ||  !date)
@@ -42,7 +45,35 @@ router.post('/add',(req,res,next)=>{
             date:date
 
         })
+
+        const files = req.files;
+
         activity.save().then(result=>{
+           
+           files.forEach(e =>{   
+           
+                const activityimage = new ActivityImage({
+                    _id:new mongoose.Types.ObjectId,
+                    activityId:result._id,
+                    image:e.destination + e.filename,
+                   
+        
+                })
+    
+                activityimage.save().then(result=>{
+                    
+                }).catch((err)=>{
+                    return res.status(500).json({
+                        success:false,
+                        data:err,
+                        message:"something Went Wrong"
+                    })
+                })
+    
+    
+            })
+
+            
             return res.status(200).json({
                 success:true,
                 data:result,
@@ -200,53 +231,6 @@ router.delete("/delete/:id", (req, res, next) => {
 
   /// activity images upload code
 
-  router.post('/addImage',upload.array('image'),(req,res,next)=>{
-    try{
-
-     
-
-        const {activityId} = req.body;
-       
-        
-
-        const files = req.files;
-
-        files.forEach(e =>{
-
-           
-            const activityimage = new ActivityImage({
-                _id:new mongoose.Types.ObjectId,
-                activityId:activityId,
-                image:e.filename,
-               
-    
-            })
-
-            activityimage.save().then(result=>{
-                return res.status(200).json({
-                    success:true,
-                    data:result,
-                    message:"Activity Image Added"
-                })
-            }).catch((err)=>{
-                return res.status(500).json({
-                    success:false,
-                    data:err,
-                    message:"something Went Wrong"
-                })
-            })
-
-
-        })
-
-   
-
-
-    }catch(err){
-        res.status(500).json({ message: err.message, success: false });
-    }
-})
-
 
 router.delete("/imagedelete/:id", (req, res, next) => {
 
@@ -254,7 +238,7 @@ router.delete("/imagedelete/:id", (req, res, next) => {
 
         ActivityImage.findById(req.params.id).then(result=>{
 
-            var imagePath = `uploads/activity/${result.image}`;
+            var imagePath = `${result.image}`;
             if (fs.existsSync(imagePath)) {
                 //file exists
                 fs.unlinkSync(imagePath);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const News = require('../model/News');
-// const CauseImage = require('../model/CauseImage');
+const NewsImage = require('../model/NewsImage');
 const multer = require('multer');
 const path = require('path');
 var fs = require('fs');
@@ -22,31 +22,61 @@ var upload = multer({ storage: storage });
 
 
 
-router.post('/add',(req,res,next)=>{
+router.post('/add',upload.array('image'),(req,res,next)=>{
     try{
 
         const {name,author,date,description,videoUrl} = req.body;
-        if(!name || !author ||  !date || !description || !videoUrl)
-        {
-                return res.status(422).json({
-                    success: false,
-                    data: "{}",
-                    message: "Please Insert All Required Fields",
-                });
-        }
+        // if(!name || !author ||  !date || !description || !videoUrl)
+        // {
+        //         return res.status(422).json({
+        //             success: false,
+        //             data: "{}",
+        //             message: "Please Insert All Required Fields",
+        //         });
+        // }
 
         const news = new News({
             _id:new mongoose.Types.ObjectId,
             name:name,
             author:author,
-            date:author,        
+            date:date,        
 
             description:description,
-            image:description,
+            // image:description,
             videoUrl:videoUrl
 
         })
         news.save().then(result=>{
+
+            // console.log(result);
+            // return false;
+            const files = req.files;
+
+            files.forEach(e =>{
+    
+               
+                const newsImage = new NewsImage({
+                    _id:new mongoose.Types.ObjectId,
+                    newsId:result._id,
+                    image:e.destination + e.filename,
+                   
+        
+                })
+    
+                newsImage.save().then(result=>{
+                   
+                }).catch((err)=>{
+                    return res.status(500).json({
+                        success:false,
+                        data:err,
+                        message:"something Went Wrong"
+                    })
+                })
+    
+    
+            })
+
+            
             return res.status(200).json({
                 success:true,
                 data:result,

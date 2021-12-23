@@ -9,8 +9,8 @@ const nodemailer = require("nodemailer");
 const helper = require("../helper/helper");
 
 router.post("/signup", (req, res, next) => {
-  const { username, email, phone, password } = req.body;
-  if (!username || !email || !phone || !password) {
+  const { username, email, phone, password,role } = req.body;
+  if (!username || !email || !phone || !password || !role) {
     return res.status(422).json({
       success: false,
       data: "{}",
@@ -57,7 +57,7 @@ router.post("/signup", (req, res, next) => {
             email: req.body.email,
             phone: req.body.phone,
             password: hash,
-            role: "admin",
+            role: role,
             status: "1",
           });
 

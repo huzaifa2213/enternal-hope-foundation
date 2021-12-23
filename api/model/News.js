@@ -5,28 +5,25 @@ const NewsSchema = new mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     name:{
         type:String,
-        required:true,
+        // required:true,
 
     },
-    image:{
-        type:String,
-        
-    },
+  
     author:{
         type:String,
-        required:true
+        // required:true
     },
     date:{
         type:Date,
-        required:true
+        // required:true
     },
     description:{
         type:String,
-        required:true
+        // required:true
     },
     videoUrl:{
         type:String,
-        required:true
+        // required:true
     }
     
 

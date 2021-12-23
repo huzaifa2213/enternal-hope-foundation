@@ -22,18 +22,18 @@ var upload = multer({ storage: storage });
 
 
 
-router.post('/add',(req,res,next)=>{
+router.post('/add',upload.array('image'),(req,res,next)=>{
     try{
 
         const {causeName,fundRaise,requiredFund,description,videoUrl} = req.body;
-        if(!causeName || !fundRaise ||  !requiredFund || !description || !videoUrl)
-        {
-                return res.status(422).json({
-                    success: false,
-                    data: "{}",
-                    message: "Please Insert All Required Fields",
-                });
-        }
+        // if(!causeName || !fundRaise ||  !requiredFund || !description || !videoUrl)
+        // {
+        //         return res.status(422).json({
+        //             success: false,
+        //             data: "{}",
+        //             message: "Please Insert All Required Fields",
+        //         });
+        // }
 
         const cause = new Cause({
             _id:new mongoose.Types.ObjectId,
@@ -45,6 +45,37 @@ router.post('/add',(req,res,next)=>{
 
         })
         cause.save().then(result=>{
+
+            const files = req.files;
+
+            files.forEach(e =>{
+    
+               
+                const causeImage = new CauseImage({
+                    _id:new mongoose.Types.ObjectId,
+                    causeId:result._id,
+                    image:e.destination + e.filename,
+                   
+        
+                })
+    
+                causeImage.save().then(result=>{
+                    return res.status(200).json({
+                        success:true,
+                        data:result,
+                        message:"Cause Image Added"
+                    })
+                }).catch((err)=>{
+                    return res.status(500).json({
+                        success:false,
+                        data:err,
+                        message:"something Went Wrong"
+                    })
+                })
+    
+    
+            })
+
             return res.status(200).json({
                 success:true,
                 data:result,
@@ -203,52 +234,6 @@ router.delete("/delete/:id", (req, res, next) => {
 
   /// cause images upload code
 
-  router.post('/addImage',upload.array('image'),(req,res,next)=>{
-    try{
-
-     
-
-        const {causeId} = req.body;
-       
-        
-
-        const files = req.files;
-
-        files.forEach(e =>{
-
-           
-            const causeImage = new CauseImage({
-                _id:new mongoose.Types.ObjectId,
-                causeId:causeId,
-                image:e.filename,
-               
-    
-            })
-
-            causeImage.save().then(result=>{
-                return res.status(200).json({
-                    success:true,
-                    data:result,
-                    message:"Activity Image Added"
-                })
-            }).catch((err)=>{
-                return res.status(500).json({
-                    success:false,
-                    data:err,
-                    message:"something Went Wrong"
-                })
-            })
-
-
-        })
-
-   
-
-
-    }catch(err){
-        res.status(500).json({ message: err.message, success: false });
-    }
-})
 
 
 router.delete("/imagedelete/:id", (req, res, next) => {
@@ -257,7 +242,7 @@ router.delete("/imagedelete/:id", (req, res, next) => {
 
         CauseImage.findById(req.params.id).then(result=>{
 
-            var imagePath = `uploads/cause/${result.image}`;
+            var imagePath = `${result.image}`;
             if (fs.existsSync(imagePath)) {
                 //file exists
                 fs.unlinkSync(imagePath);
