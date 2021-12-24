@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Cause = require('../../model/Cause');
 const CauseImage = require('../../model/CauseImage');
 
-router.get("/get",(req,res,next)=>{
+router.get("/",(req,res,next)=>{
 
     try {
 
