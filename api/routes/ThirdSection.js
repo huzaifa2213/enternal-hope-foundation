@@ -2,9 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 var fs = require('fs');
-
-
-
 const ThirdSection = require('../model/ThirdSection');
 
 
@@ -42,7 +39,7 @@ const storage = multer.diskStorage({
 router.post("/add",upload.fields([{name:'image1',maxCount:1},{name:'image2',maxCount:1},{name:'image3',maxCount:1},{name:'image4',maxCount:1}]),(req,res,next)=>{
 
     try {
-             const { icon1,heading1,text1,icon2,heading2,text2,icon3,heading3,text3,icon4,heading4,text4} = req.body;
+             const { heading1,text1,heading2,text2,heading3,text3,heading4,text4} = req.body;
 
          
             
@@ -65,16 +62,12 @@ router.post("/add",upload.fields([{name:'image1',maxCount:1},{name:'image2',maxC
             const thirdSection = new ThirdSection({
                 _id:new mongoose.Types.ObjectId(),
                
-                icon1:icon1,
                 heading1:heading1,
                 text1:text1,
-                icon2:icon2,
                 heading2:heading2,
                 text2:text2,
-                icon3:icon3,
                 heading3:heading3,
                 text3:text3,
-                icon4:icon4,
                 heading4:heading4,
                 text4:text4,
                 image1:image1.filename,
@@ -103,13 +96,6 @@ router.post("/add",upload.fields([{name:'image1',maxCount:1},{name:'image2',maxC
     } catch(err) {
         res.status(500).json({ message: err.message, success: false });
     }
-
-
-    
-
-
-
-
 })
 
 
@@ -126,22 +112,18 @@ router.get("/get-third-section",(req,res,next)=>{
                    var obj =  {
                         _id: e._id,
                        
-                        icon1: e.icon1,
                         heading1: e.heading1,
                         text1: e.text1,
                         image1: "uploads/thirdsection/"+e.image1,
-                        icon2: e.icon2,
                         heading2: e.heading2,
                         text2: e.text2,
                         image2: "uploads/thirdsection/"+e.image2,
-                        icon3: e.icon3,
                         heading3: e.heading3,
                         text3: e.text3,
                         image3: "uploads/thirdsection/"+e.image3,
-                        icon4: e.icon4,
                         heading4: e.heading4,
                         text4: e.text4,
-                        image4: "uploads/" +e.image4
+                        image4: "uploads/thirdsection/" +e.image4
                        
                       }
 
@@ -177,13 +159,6 @@ router.get("/get-third-section",(req,res,next)=>{
     } catch(err) {
       res.status(500).json({ message: err.message, success: false });
     }
-
-
-    
-
-
-
-
 })
 
 router.get("/get-third-section-by-id/:id",(req,res,next)=>{
@@ -226,7 +201,7 @@ router.put("/update-third-section/:id",upload.fields([{name:'image1',maxCount:1}
 
     try{
 
-      const { icon1,heading1,text1,icon2,heading2,text2,icon3,heading3,text3,icon4,heading4,text4} = req.body;
+      const { heading1,text1,heading2,text2,heading3,text3,heading4,text4} = req.body;
 
          
             
@@ -242,16 +217,12 @@ router.put("/update-third-section/:id",upload.fields([{name:'image1',maxCount:1}
                 {
                     $set:{
 
-                      icon1:icon1,
                       heading1:heading1,
                       text1:text1,
-                      icon2:icon2,
                       heading2:heading2,
                       text2:text2,
-                      icon3:icon3,
                       heading3:heading3,
                       text3:text3,
-                      icon4:icon4,
                       heading4:heading4,
                       text4:text4,
                       image1:image1.filename,
@@ -312,22 +283,5 @@ router.put("/update-third-section/:id",upload.fields([{name:'image1',maxCount:1}
     }catch{
         console.log();
     }
-   
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   });
 module.exports = router

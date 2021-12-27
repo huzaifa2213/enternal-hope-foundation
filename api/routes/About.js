@@ -4,39 +4,57 @@ const router = express.Router();
 
 const About = require('../model/About');
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "./uploads/about/");
+    },
+    filename: function (req, file, cb) {
+      cb(
+        null,
+        new Date().getDate() + new Date().getSeconds() + file.originalname
+      );
+    },
+  });
+  
+  const upload = multer({
+    storage: storage,
+    // limits: {
+    //   fileSize: 1024 * 1024 * 5
+    // },
+    // fileFilter: fileFilter
+  });
 
 
-router.post("/add-about",(req,res,next)=>{
+
+
+router.post("/add-about",upload.single("image"),(req,res,next)=>{
 
     try {
-             const { aboutText,icon1,number1,text1,icon2,number2,text2,videoUrl} = req.body;
+             const { aboutText,number1,number2} = req.body;
+              
 
-         
             
-            // if (!aboutText) {
-            //     return res.status(422).json({
-            //         success: false,
-            //         data: "{}",
-            //         message: "Please Insert All Required Fields",
-            //     });
-            // }
+
+             var sliderimage = "";
+             if (req.file.filename != '') {
+
+               
+                sliderimage = req.file.filename;
+             }
+
+            //  console.log(sliderimage);
 
             const about = new About({
                 _id:new mongoose.Types.ObjectId(),
                 aboutText:aboutText,
-                icon1:icon1,
                 number1:number1,
-                text1:text1,
-                icon2:icon2,
                 number2:number2,
-                text2:text2,
-                videoUrl:videoUrl,
-               
-
-            });
-
-          
-            about.save().then(result=>{
+                image:sliderimage,
+                });
+                
+             about.save().then(result=>{
+                console.log(result);
                 return res.status(200).json({
                     success:true,
                     data:"{}",
@@ -96,13 +114,6 @@ router.get("/get-about",(req,res,next)=>{
         console.log();
         // [Error: Uh oh!]
     }
-
-
-    
-
-
-
-
 })
 
 router.get("/get-about-by-id/:id",(req,res,next)=>{
@@ -144,23 +155,23 @@ router.put("/update-about/:id",(req, res, next) => {
 
     try{
 
-        const { aboutText,icon1,number1,text1,icon2,number2,text2,videoUrl} = req.body;
+        const { aboutText,number1,number2} = req.body;
 
           
          
+        var sliderImage = "";
+        if (req.file != undefined) {
+            sliderImage = req.file.filename;
+        }
 
             About.findOneAndUpdate({_id:req.params.id},
                 {
                     $set:{
 
                         aboutText:aboutText,
-                        icon1:icon1,
                         number1:number1,
-                        text1:text1,
-                        icon2:icon2,
                         number2:number2,
-                        text2:text2,
-                        videoUrl:videoUrl,
+                        image:sliderImage,
 
                     }
                 }
@@ -168,7 +179,7 @@ router.put("/update-about/:id",(req, res, next) => {
                     return res.status(200).json({
                       success:true,
                       data: result,
-                      message: "banner Updated Successfully",
+                      message: "About Updated Successfully",
                     });
                   })
                   .catch((err) => {

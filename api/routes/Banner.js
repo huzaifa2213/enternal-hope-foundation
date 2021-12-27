@@ -31,7 +31,7 @@ router.post("/add-banner",upload.single("sliderImage"),(req,res,next)=>{
     try {
              const { pageType,sliderText,buttonText,buttonLink} = req.body;
 
-             const sliderImage = "";
+             var sliderImage = "";
                 if (req.file != undefined) {
                     sliderImage = req.file.filename;
                 }

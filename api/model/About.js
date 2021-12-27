@@ -5,13 +5,9 @@ const aboutSchema = new mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     
     aboutText:String,
-    icon1:String,
     number1:String,
-    text1:String,
-    icon2:String,
     number2:String,
-    text2:String,
-    videoUrl:String
+    image:String
 
     
 },{timestamps:true});
